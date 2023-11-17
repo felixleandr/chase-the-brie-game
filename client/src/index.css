@@ -1,68 +1,159 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.section1 {
+  width: 100%;
+  min-height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+}
+.section1::before {
+  content: "";
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  background: url('./assets/background.jpg') top center;
+  background-size: cover;
+  transform: translateZ(-1px) scale(2.2);
+  filter: blur(2px);
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+.section1::after {
+  content: "";
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  background: url("./assets/background-bot3.png") top center;
+  background-size: cover;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+.section1 .text {
+  top: 10%;
+  transform: translateZ(-0.5px) scale(1.5,1.6) translate(-33%,10%);
+}
+
+
+.text {
+  bottom: 960px;
+  left: 50%;
+  position: absolute;
+  color: white;
+  font-size: 7vw;
+  transform: scale(1,1.1); translate: (-50%, 10%);
+  border: none;
+  font-family: 'Rubik Mono One', monospace;
+  text-align: center;
+}
+
+html {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.con {
+  width: 100vw;
+  height: 100vh;
+  perspective: 1px;
+  transform-style: preserve-3d;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.section1, .section2 {
+  width: 100%;
   min-height: 100vh;
+  position: relative;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.section2 {
+  min-height: 100%;
+  background: rgb(25,72,98);
+  background: linear-gradient(4deg, rgba(25,72,98,1) 0%, rgba(0,0,0,1) 50%);
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+
+.popup {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+  }
+  
+  .popup-inner {
+  background-color: white;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+  width: 40%;
+  }
+  
+  .popup-inner h2 {
+  margin-top: 0;
+  }
+  
+  .popup-inner label {
+  display: block;
+  margin-bottom: 10px;
+  }
+  
+  .popup-inner input {
+  width: 100%;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  }
+  
+  .popup-inner button[type="submit"],
+  .popup-inner button[type="button"] {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-right: 10px;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+  border-radius: 5px;
   }
-  a:hover {
-    color: #747bff;
+  
+  .popup-inner button[type="submit"]:hover,
+  .popup-inner button[type="button"]:hover {
+  background-color: #45a049;
   }
-  button {
-    background-color: #f9f9f9;
+  
+  .popup-inner button[type="submit"] {
+  margin-top: 20px;
   }
-}
+  
+  .popup-inner button[type="button"] {
+  margin-top: 20px;
+  background-color: #f44336;
+  }
+  
+  .popup-inner button[type="button"]:hover {
+  background-color: #da190b;
+  }
+  
+  .popup-inner button[type="submit"]:disabled {
+  background-color: #bfbfbf;
+  color: #ffffff;
+  cursor: not-allowed;
+  }
+  
+  .popup-inner button[type="button"]:disabled {
+  background-color: #bfbfbf;
+  color: #ffffff;
+  cursor: not-allowed;
+  }
