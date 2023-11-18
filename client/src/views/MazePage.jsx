@@ -1,6 +1,7 @@
 import ToggleMusic from "../components/SetupBar"
 import background from '../assets/background.jpg'
 
+
 function MazePage() {
     return (
         <>

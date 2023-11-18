@@ -1,5 +1,6 @@
 import { useState } from "react"
 import Login from "../components/LoginPop";
+import SetupBar from "../components/SetupBar";
 
 
 function LandingPage() {
@@ -18,6 +19,7 @@ function LandingPage() {
                 <div className="section1">
                     <div className="text">CHASE THE BRIE</div>
                 </div>
+                <SetupBar/>
                 <div className="section2 flex justify-center">
                     <div className="flex justify-center w-[1000px] mt-[100px] h-full">
                         <div className="flex flex-col">

@@ -1,14 +1,36 @@
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { MdMusicNote, MdMusicOff } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import backgroundMusic from '../assets/audio/Shortwire - Reconfig [PV].mp3'
 
 
-function ToggleMusic() {
+function SetupBar() {
     const [music, setMusic] = useState(true)
+    const musicRef = useRef(null);
+    const location = useLocation()
 
     const toggleMusic = () => {
         setMusic(!music)
     }
+
+    useEffect(() => {
+        console.log(location.pathname);
+    }, [location.pathname])
+
+    useEffect(() => {
+        // Memainkan atau memberhentikan musik latar belakang saat komponen dimuat atau di-unmount
+        if (musicRef.current && music) {
+          musicRef.current.play();
+        }
+    
+        return () => {
+          let musicReference = musicRef;
+          if (musicReference?.current) {
+            musicReference.current.pause();
+          }
+        };
+      }, [music]); // Efek ini hanya berjalan pada perubahan isMusicPlaying
+
 
     return (
         <>
@@ -24,12 +46,15 @@ function ToggleMusic() {
                         </button>
                     </div>}
                     <div>
-                        <Link to={'/'}>Quit Game</Link>
+                        {
+                           location.pathname !== '/' && <Link to={'/'}>Quit Game</Link>
+                        }
                     </div>
                 </div>
+            <audio ref={musicRef} loop src={backgroundMusic} />
             </div>
         </>
     )
 }
 
-export default ToggleMusic
+export default SetupBar

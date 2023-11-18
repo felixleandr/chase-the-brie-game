@@ -9,6 +9,9 @@ export default {
       colors: {
         'regal-blue': '#143E54',
       },
+      gridTemplateColumns: {
+        gridmap: "repeat(52, 0fr)",
+      },
     },
     fontFamily: {
       'Rubik' : ['"Rubik Mono One"', 'monospace'],
