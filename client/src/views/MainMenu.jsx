@@ -1,13 +1,21 @@
 import { useState } from 'react';
 import background from '../assets/background.jpg'
-import ToggleMusic from '../components/ToggleMusic';
+import ToggleMusic from '../components/SetupBar';
 import { Link } from 'react-router-dom';
 import WaitingRoom from '../components/WaitingRoom';
+import Leaderboard from '../components/Leaderboard';
 
 function MainMenu() {
     const [waitingRoom, setWaitingRoom] = useState(false)
+    const [leaderboard, setLeaderboard] = useState(false)
+
     const togglePopUp = () => {
         setWaitingRoom(!waitingRoom)
+    }
+
+    const toggleLeaderboard = () => {
+        console.log('masuk sini');
+        setLeaderboard(!leaderboard)
     }
 
     return (
@@ -25,12 +33,14 @@ function MainMenu() {
                         </div>
                         <div className='flex flex-col gap-9 mt-[100px] text-gray-300 text-xl'>
                             <button className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl' onClick={togglePopUp}>Single Player</button>
-                            <button className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl'>Multiplayer</button>
-                            <button className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl'>Leaderboard</button>
+                            <button className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl' onClick={togglePopUp}>Multiplayer</button>
+                            <button className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl' onClick={toggleLeaderboard}>Leaderboard</button>
                             <Link className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl text-center' to={'/'}>Quit Game</Link>
                         </div>
                     </div>
-                    { waitingRoom && <WaitingRoom/>   
+                    { waitingRoom && <WaitingRoom toggle={togglePopUp}/>   
+                    }
+                    { leaderboard && <Leaderboard toggle={toggleLeaderboard}/>   
                     }
                 </div>
             </div>
