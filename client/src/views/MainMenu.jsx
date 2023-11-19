@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import background from '../assets/background.jpg'
 import SetupBar from '../components/SetupBar';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import WaitingRoom from '../components/WaitingRoom';
 import Leaderboard from '../components/Leaderboard';
 
 function MainMenu() {
     const [waitingRoom, setWaitingRoom] = useState(false)
     const [leaderboard, setLeaderboard] = useState(false)
+    const navigate = useNavigate();
 
     const togglePopUp = () => {
         setWaitingRoom(!waitingRoom)
@@ -18,6 +19,12 @@ function MainMenu() {
         setLeaderboard(!leaderboard)
     }
 
+    const signOut = () => {
+        localStorage.clear();
+        navigate("/");
+      };
+
+      
     return (
         <>
             <div className="w-full h-screen bg-gradient-to-r from-black to-regal-blue ... relative">
@@ -35,7 +42,7 @@ function MainMenu() {
                             <button className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl' onClick={togglePopUp}>Single Player</button>
                             <button className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl' onClick={togglePopUp}>Multiplayer</button>
                             <button className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl' onClick={toggleLeaderboard}>Leaderboard</button>
-                            <Link className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl text-center' to={'/'}>Quit Game</Link>
+                            <button  className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl text-center' onClick={signOut}>Quit Game</button>
                         </div>
                     </div>
                     { waitingRoom && <WaitingRoom toggle={togglePopUp}/>   
