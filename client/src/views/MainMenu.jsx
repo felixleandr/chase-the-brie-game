@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import background from '../assets/background.jpg'
-import SetupBar from '../components/SetupBar';
+import SetupBar from '../components/GameSettings';
 import { Link, useNavigate } from 'react-router-dom';
 import WaitingRoom from '../components/WaitingRoom';
 import Leaderboard from '../components/Leaderboard';

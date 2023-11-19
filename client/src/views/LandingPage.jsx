@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Login from "../components/LoginPop";
-import SetupBar from "../components/SetupBar";
+import SetupBar from "../components/GameSettings";
 import { Link, Outlet } from "react-router-dom";
 
 function LandingPage() {

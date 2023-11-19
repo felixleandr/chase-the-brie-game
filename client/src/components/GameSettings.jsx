@@ -3,7 +3,7 @@ import { MdMusicNote, MdMusicOff } from "react-icons/md";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import backgroundMusic from "../assets/audio/Shortwire - Reconfig [PV].mp3";
 
-function SetupBar() {
+function GameSettings() {
   const [music, setMusic] = useState(true);
   const musicRef = useRef(null);
   const location = useLocation();
@@ -20,7 +20,6 @@ function SetupBar() {
   };
 
   useEffect(() => {
-    console.log(location.pathname);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -39,7 +38,7 @@ function SetupBar() {
 
   return (
     <>
-      <div className="absolute top-1 right-20">
+      <div className="flex w-full justify-end">
         <div className="flex justify-between items-center gap-10 text-gray-300 font-Rubik">
           {music ? (
             <div className=" text-gray-300 font-Rubik">
@@ -68,4 +67,4 @@ function SetupBar() {
   );
 }
 
-export default SetupBar;
+export default GameSettings;
