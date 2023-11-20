@@ -26,7 +26,7 @@ const router = createBrowserRouter([
     element: <MainMenu />,
   },
   {
-    path: "/maze",
+    path: "/maze/:roomId",
     element: <MazePage />,
   },
 ]);

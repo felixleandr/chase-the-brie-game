@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import background from "../assets/background.jpg";
 import GameSettings from "../components/GameSettings";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,10 +6,13 @@ import WaitingRoom from "../components/WaitingRoom";
 import Leaderboard from "../components/Leaderboard";
 import JoinRoom from "../components/JoinRoomPop";
 
+
 function MainMenu() {
   const [waitingRoom, setWaitingRoom] = useState(false);
   const [leaderboard, setLeaderboard] = useState(false);
   const [joinRoom, setJoinRoom] = useState(false);
+  const [roomCode, setRoomCode] = useState(null);
+
 
   const navigate = useNavigate();
 
@@ -77,7 +80,9 @@ function MainMenu() {
           </div>
           {waitingRoom && <WaitingRoom toggle={togglePopUp} />}
           {leaderboard && <Leaderboard toggle={toggleLeaderboard} />}
-          {joinRoom && <JoinRoom toggle={toggleJoinRoom} />}
+          {joinRoom && (
+            <JoinRoom toggle={toggleJoinRoom} setRoomCode={setRoomCode} />
+          )}
         </div>
       </div>
     </>

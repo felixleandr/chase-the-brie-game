@@ -3,23 +3,24 @@ import { getCellObjects, getPath } from "../utils/helpers";
 import { BFS, generateRandomMaze } from "../app/index";
 import Cell from "./Cell";
 
-export default function GridBoard() {
+export default function GridBoard({ socket, roomId }) {
   const gridBoardCells = useRef(getCellObjects());
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
   const [renderFlag, setRenderFlag] = useState(false);
   const [foundPath, setFoundPath] = useState(null);
-  const [gridMap, setGridMap] = useState(null)
-  const [pathCount, setPathCount] = useState(null)
+  const [gridMap, setGridMap] = useState(null);
+  const [pathCount, setPathCount] = useState(null);
 
   const [cellsScanned, setCellsScanned] = useState(0);
   const [cellsTraveled, setCellsTraveled] = useState(0);
   const [timeTaken, setTimeTaken] = useState(0);
 
-
   const clearBoard = () => {
+    console.log(gridMap);
     gridBoardCells.current = getCellObjects(true, true, gridBoardCells.current);
-    resetBoardData();
+    // resetBoardData();
+    console.log(gridBoardCells.current, 11111);
   };
 
   const resetBoardData = () => {
@@ -53,7 +54,6 @@ export default function GridBoard() {
     }
   };
 
-  
   const animatePath = (path) => {
     for (let i = 0; i < path.length; i++) {
       setTimeout(() => {
@@ -66,7 +66,7 @@ export default function GridBoard() {
       }, 20 * i);
     }
   };
-  
+
   let grid;
   const getDistance = () => {
     grid = gridBoardCells.current;
@@ -74,8 +74,8 @@ export default function GridBoard() {
     let end = grid[endPoint.row][endPoint.col];
 
     const path = getPath(end);
-    return path
-  }
+    return path;
+  };
 
   const visualizeAlgo = () => {
     grid = gridBoardCells.current;
@@ -88,7 +88,7 @@ export default function GridBoard() {
     let start = grid[startPoint.row][startPoint.col];
     let end = grid[endPoint.row][endPoint.col];
     let visitedCells = [];
-    
+
     let [BFSCells, BFSTime] = BFS(grid, start, end) || [];
     // let a = BFS(grid, start, end) || [];
     visitedCells = BFSCells || [];
@@ -96,29 +96,44 @@ export default function GridBoard() {
     setTimeTaken(BFSTime || 0);
 
     const path = getPath(end);
-    console.log(path, 'padang');
+    console.log(path, "padang");
     // console.log(visitedCells, path, 'inii visitedcells');
     setCellsScanned(visitedCells.length);
     animateAlgo(visitedCells, path);
-    return path
+    return path;
   };
 
   const handleGenerateMaze = () => {
     setRenderFlag(!renderFlag);
     clearBoard(); // just to be sure that board and path is cleared
     const startAndEndPoint = generateRandomMaze(gridBoardCells.current);
-
-    setStartPoint(startAndEndPoint.startCell)
-    setEndPoint(startAndEndPoint.endCell)
-    setGridMap(gridBoardCells.current)
-
-  }
+    const gridBoard = gridBoardCells.current;
+    // console.log(startAndEndPoint);
+    socket.emit("playGame", { startAndEndPoint, roomId, gridBoard });
+    setStartPoint(startAndEndPoint.startCell);
+    setEndPoint(startAndEndPoint.endCell);
+    setGridMap(gridBoardCells.current);
+  };
 
   useEffect(() => {
     if (foundPath && startPoint && endPoint) {
       animatePath(foundPath);
     }
   }, [foundPath]);
+
+  useEffect(() => {
+    socket.on("playGame", (roomData) => {
+      console.log(roomData);
+      setRenderFlag(!renderFlag);
+      clearBoard(); // just to be sure that board and path is cleared
+      setStartPoint(roomData.startAndEndPoint.startCell);
+      setEndPoint(roomData.startAndEndPoint.endCell);
+      setGridMap({ current: roomData.gridBoard });
+      gridBoardCells.current = roomData.gridBoard;
+    });
+  }, []);
+
+  console.log("rerender");
 
   return (
     <>
@@ -149,7 +164,7 @@ export default function GridBoard() {
                     endPoint={endPoint}
                     getDistance={getDistance}
                     visualizeAlgo={visualizeAlgo}
-                    pathCount = {pathCount}
+                    pathCount={pathCount}
                     map={gridMap}
                     key={colIndex}
                     id={`cell-${cell.row}-${cell.col}`}

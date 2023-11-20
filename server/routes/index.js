@@ -9,7 +9,7 @@ router.post("/register", Controller.register);
 
 router.post("/login", Controller.login);
 
-router.use(authentication);
+// router.use(authentication);
 
 router.get("/users", Controller.userFindAll);
 
@@ -20,8 +20,8 @@ router.get("/users/:_id", Controller.userFindOne);
 
 router.delete("/users/:_id", Controller.deleteUser);
 
-router.get('/histories', HistoryController.findAll);
+router.get("/histories", HistoryController.findAll);
 
-router.post('/histories', HistoryController.createHistory);
+router.post("/histories", HistoryController.createHistory);
 
 module.exports = router;
