@@ -1,3 +1,4 @@
+require("dotenv").config();
 require('dotenv').config()
 const express = require("express");
 const app = express();
@@ -23,3 +24,4 @@ connect().then((db) => {
       console.log("app connected to " + port);
     });
 });
+

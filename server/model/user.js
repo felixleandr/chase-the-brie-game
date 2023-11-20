@@ -40,25 +40,30 @@ class User {
 
   static async postUser(user) {
     try {
-      // const users = getDb().collection("users");
-      // // Pastikan properti password ada dan memiliki nilai
-      // if (!user.password) {
-      //   throw new Error("Password is required");
-      // }
-      // // Hash the password
-      // const hashedPassword = await bcrypt.hash(user.password, 10);
-      // const userToInsert = {
-      //   ...user,
-      //   password: hashedPassword,
-      // };
-      // const result = await users.insertOne(userToInsert);
-      // return { id: result.insertedId, ...user };
       const users = getDb().collection("users");
+      user.singlePlayerWin = 0;
+      user.multiPlayerWin = 0;
 
       const newUser = await users.insertOne(user);
       return await users.findOne({
         _id: new ObjectId(newUser.insertedId),
       });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  static async incrementWins(_id, gameType) {
+    //gameType isinya singlePlayerWin atau multiPlayerWin
+    try {
+      const users = getDb().collection("users");
+      const columnToUpdate = gameType;
+
+      return await users.updateOne(
+        { _id: new ObjectId(_id) },
+        { $inc: { [columnToUpdate]: 1 } }
+      );
     } catch (error) {
       console.log(error);
       throw error;

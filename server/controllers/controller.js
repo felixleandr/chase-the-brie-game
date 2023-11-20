@@ -23,7 +23,7 @@ class Controller {
       res.status(201).json({ message: `${newUser.username} has been added` });
     } catch (err) {
       console.log(err);
-      res.status(500).json(err);
+      res.status(500).json({ message: "Internal Server Error" });
     }
   }
 
@@ -50,7 +50,7 @@ class Controller {
         .json({ access_token: createToken({ id: idString }), user });
     } catch (err) {
       console.log(err);
-      res.status(500).json(err);
+      res.status(500).json({ message: "Internal Server Error" });
     }
   }
 
@@ -60,7 +60,7 @@ class Controller {
       res.status(200).json(users);
     } catch (err) {
       console.log(err);
-      res.status(500).json(err);
+      res.status(500).json({ message: "Internal Server Error" });
     }
   }
 
@@ -77,10 +77,30 @@ class Controller {
 
   static async deleteUser(req, res) {
     try {
-      const { id } = req.params;
-      const user = await User.deleteUser(id);
+      const { _id } = req.params;
+      const user = await User.deleteUser(_id);
       res.status(200).json(user);
     } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async incrementWins(req,res){
+    try {
+      const _id = req.user._id 
+
+      //gameType isinya singlePlayer atau multiPlayer
+      //dari client ngirim gameType = "singlePlayerWin" atau "multiPlayerWin" di body
+      const { gameType } = req.body;
+
+      if (!gameType) {
+        return res.status(400).json({ message: 'gameType is required in the request body' });
+      }
+
+      const result = await User.incrementWins(_id, gameType);
+      res.status(500).json({ result, message: `${gameType} wins incremented successfully` });
+    } catch (error) {
       console.log(err);
       res.status(500).json({ message: "Internal Server Error" });
     }
