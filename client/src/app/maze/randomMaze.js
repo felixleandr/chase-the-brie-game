@@ -6,6 +6,7 @@ export function generateRandomMaze(grid) {
   let startCell, endCell, path, grid1DArray;
   // do {
   grid1DArray = getCells(grid);
+  
 
   // Reset previous maze state
   grid1DArray.forEach((element) => {

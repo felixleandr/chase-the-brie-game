@@ -3,6 +3,8 @@ import background from '../assets/background.jpg'
 import GridBoard from "../components/GridBoard"
 import PlayerInfo from "../components/PlayerInfo";
 
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:3000");
 
 
 function MazePage() {
@@ -13,7 +15,7 @@ function MazePage() {
                     <GameSettings/>
                     <div className="bg-slate-900 py-5 px-5 pb-10">
                         <PlayerInfo/>
-                        <GridBoard></GridBoard>
+                        <GridBoard socket={socket}></GridBoard>
                     </div>
                 </div>
             </div>

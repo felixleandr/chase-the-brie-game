@@ -40,15 +40,6 @@ function Login() {
     }
   }
 
-  //const [register, setRegister] = useState(false);
-
-  // const togglePopUp = () => {
-  //   setRegister(!register);
-  // };
-
-  // function closePopUp() {
-  //   toggle();
-  // }
 
   return (
     <>

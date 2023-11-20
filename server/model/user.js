@@ -1,6 +1,6 @@
 const { ObjectId } = require("mongodb");
 const { getDb } = require("../config/mongo");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 class User {
   static async findAll() {

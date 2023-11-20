@@ -29,7 +29,6 @@ class Controller {
 
   static async login(req, res, next) {
     try {
-      console.log(2222);
       const { email, password } = req.body;
       if (!email) {
         return res.status(400).json({ message: "Email is required" });

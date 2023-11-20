@@ -18,6 +18,7 @@ function WaitingRoom ({toggle}) {
     const closePopUp = () => {
         toggle()
     }
+    
     return (
         <>
            <div className='w-[590px] h-[590px] bg-slate-950 rounded-[50px] fixed items-center font-Rubik px-9 py-10'>
