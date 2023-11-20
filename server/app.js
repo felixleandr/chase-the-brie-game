@@ -17,10 +17,10 @@ app.use(router);
 //       console.log("app connected to " + port);
 //     });
 
-connect().then((db) => {
-    console.log("success to connect to mongo");
-    app.listen(port, () => {
-      console.log("app connected to " + port);
-    });
-});
+// connect().then((db) => {
+//     console.log("success to connect to mongo");
+//     app.listen(port, () => {
+//       console.log("app connected to " + port);
+//     });
+// });
 
