@@ -131,14 +131,14 @@ export default function Cell({
     <>
      <div
       {...props}
-      className={`cell lg:w-6 w-4 lg:h-6 h-4 inline-flex justify-center items-center aspect-square border-[0.1px] border-violet-900${
+      className={`cell lg:w-6 w-4 lg:h-6 h-4 inline-flex justify-center items-center aspect-square border-[0.1px] border-violet-800${
         isStartPoint ? (
           <img width="64" height="64" src="https://img.icons8.com/external-yogi-aprelliyanto-outline-color-yogi-aprelliyanto/32/000000/external-mouse-toy-pet-shop-yogi-aprelliyanto-outline-color-yogi-aprelliyanto.png" alt="external-mouse-toy-pet-shop-yogi-aprelliyanto-outline-color-yogi-aprelliyanto"/>
         ) : ""
       } ${isEndPoint ? (
         <img width="64" height="64" src="https://img.icons8.com/cotton/64/000000/cheese--v2.png" alt="cheese--v2"/>
       ) : null} ${
-        isWall ? "!bg-violet-900 wall-animate" : ""
+        isWall ? "!bg-violet-700 wall-animate" : ""
       }`}
       style={{
         gridColumn: startPointPosition.col + 1,

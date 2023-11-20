@@ -38,7 +38,7 @@ function GameSettings() {
 
   return (
     <>
-      <div className="flex w-full justify-end">
+      <div className="absolute top-1 right-20 z-10">
         <div className="flex justify-between items-center gap-10 text-gray-300 font-Rubik">
           {music ? (
             <div className=" text-gray-300 font-Rubik">

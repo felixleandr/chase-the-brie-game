@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Login from "../components/LoginPop";
-import SetupBar from "../components/GameSettings";
+import GameSettings from "../components/GameSettings";
 import { Link, Outlet } from "react-router-dom";
 
 function LandingPage() {
@@ -14,10 +14,10 @@ function LandingPage() {
   return (
     <>
       <div className="con">
+        <GameSettings/>
         <div className="section1">
           <div className="text">CHASE THE BRIE</div>
         </div>
-        <SetupBar />
         <div className="section2 flex justify-center">
           <div className="flex justify-center w-[1000px] mt-[100px] h-full">
             <div className="flex flex-col">

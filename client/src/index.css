@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* html {
+  height: 100vh; 
+  overflow: hidden;
+}  */
+
 .section1 {
   width: 100%;
   min-height: 100%;

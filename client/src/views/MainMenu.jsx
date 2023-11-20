@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import background from '../assets/background.jpg'
-import SetupBar from '../components/GameSettings';
+import GameSettings from '../components/GameSettings';
 import { Link, useNavigate } from 'react-router-dom';
 import WaitingRoom from '../components/WaitingRoom';
 import Leaderboard from '../components/Leaderboard';
@@ -31,7 +31,7 @@ function MainMenu() {
                 <div>
                     <img className="w-full h-screen brightness-75" src={background} alt=""/>
                 </div>
-                <SetupBar/>
+                <GameSettings/>
                 <div className='w-[600px] h-[600px] fixed top-[80px] bg-gradient-to-r from-lime-300  to-teal-500 ... left-[30%] rounded-[50px] flex justify-center items-center'>
                     <div className='w-[590px] h-[590px] bg-slate-950 rounded-[50px] flex flex-col items-center font-Rubik px-9 py-10'>
                         <div className=''>

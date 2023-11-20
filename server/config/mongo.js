@@ -15,7 +15,6 @@ async function connect() {
 }
 
 function getDb() {
-  console.log(db);
   return db;
 }
 
