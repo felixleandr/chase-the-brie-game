@@ -77,12 +77,15 @@ export function getPath(endPoint) {
 
 export function getShortestPathCells(endCell) {
   const pathCells = [];
+  console.log(endCell, 'endcell');
   let currentCell = endCell || [];
-  console.log(endCell, currentCell, 'ini');
-  while (currentCell || pathCells < 1000) {
-    // console.log(currentCell, 'dalam looping');
-    pathCells.push(currentCell);
-    currentCell = currentCell.previousCell;
+  
+  if(endCell) {
+    while (currentCell || pathCells < 1000) {
+      console.log(currentCell, 'dalam looping');
+      pathCells.push(currentCell);
+      currentCell = currentCell.previousCell;
+    }
   }
   return pathCells;
 }

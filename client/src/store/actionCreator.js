@@ -1,4 +1,4 @@
-const url = "http://localhost:3000";
+const url = "https://4524-139-228-111-126.ngrok-free.app";
 
 export function register(data) {
   return async (dispatch, getState) => {

@@ -9,6 +9,10 @@ class User {
       const data = await users
         .find({}, { projection: { password: 0 } })
         .toArray();
+      data.map(el => {
+        el.totalWins = 0
+        return el
+      })
       return data;
     } catch (error) {
       throw error;

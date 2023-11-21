@@ -2,7 +2,7 @@ import { getCells } from "../../utils/helpers";
 import { getCellObjects, getPath } from "../../utils/helpers";
 import { BFS } from "../algorithms/BFS";
 
-export function generateRandomMaze(grid) {
+export function generateRandomMaze(grid, isMultiPlayer, playerCount) {
   let startCell, endCell, path, grid1DArray;
   // do {
   grid1DArray = getCells(grid);
@@ -24,10 +24,17 @@ export function generateRandomMaze(grid) {
 
   const startQuadrantIndex = Math.floor(Math.random() * quadrants.length);
     const startQuadrant = quadrants[startQuadrantIndex];
-    startCell = getRandomCellInQuadrant(grid1DArray, startQuadrant);
-    startCell.isStartPoint = true;
     // Randomly select start point
-
+    let startCellArr = []
+    if (isMultiPlayer) {
+      for (let i = 0; i < playerCount; i++) {
+        startCell = getRandomCellInQuadrant(grid1DArray, startQuadrant);
+        startCell.name = i
+        startCellArr.push(startCell);
+        startCell.isStartPoint = true;
+      }
+    }
+    console.log(startCellArr, 'cell arr');
 
     // Calculate the index of the target quadrant based on the start quadrant
     const targetQuadrantIndex = (startQuadrantIndex + 2) % quadrants.length;
@@ -73,7 +80,7 @@ export function generateRandomMaze(grid) {
     element.isWall = element.cellNumber % Math.ceil(Math.random() * 10) === 0;
   }
   // console.log(startCell, endCell, 'start end');
-  let startAndEndPoint = {startCell, endCell}
+  let startAndEndPoint = {startCellArr, endCell}
   return startAndEndPoint
 }
 
