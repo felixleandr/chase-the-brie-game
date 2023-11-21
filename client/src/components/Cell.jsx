@@ -67,7 +67,7 @@ export default function Cell({
         // <img className="w-7 h-7" src={iconsMouse} alt="external-mouse-toy-pet-shop-photo3ideastudio-gradient-photo3ideastudio"/>
         ""
       ) : isEndPoint ? (
-        <img className="w-6 h-6" src={iconsCheese} alt="cheese--v2"/>
+        <img className="w-5 h-5" src={iconsCheese} alt="cheese--v2"/>
       ) : null}
     </div>
     </>

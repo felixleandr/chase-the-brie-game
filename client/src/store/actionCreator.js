@@ -1,4 +1,4 @@
-const url = "https://4524-139-228-111-126.ngrok-free.app";
+const url = "https://confirmed-antique-boysenberry.glitch.me";
 
 export function register(data) {
   return async (dispatch, getState) => {

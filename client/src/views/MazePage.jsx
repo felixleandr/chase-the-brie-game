@@ -12,7 +12,6 @@ function MazePage() {
     const { roomId } = useParams();
     const [players, setPlayers] = useState([]);
     
-    console.log(players, 'playerss');
     useEffect(() => {
         let player = { name: localStorage.user };
         if (roomId) {
@@ -21,14 +20,17 @@ function MazePage() {
                 access_token: "1223",
                 player,
             });
-
+            
             socket.on('joinRoom',(player) => {
                 setPlayers((previousPlayer) => {
                     return [...previousPlayer, player]
                 })
             } )
+        } else {
+            setPlayers([player])
         }
     }, [roomId]);
+    console.log(players, 'dari maze page ');
 
     return (
         <>

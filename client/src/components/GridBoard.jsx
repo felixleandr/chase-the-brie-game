@@ -5,7 +5,7 @@ import Cell from "./Cell";
 import { useDispatch } from "react-redux";
 import Players from "./Players";
 
-export default function GridBoard({socket, roomId, players}) {
+export default function GridBoard({ socket, roomId, players }) {
     const gridBoardCells = useRef(getCellObjects());
     const [startPoint, setStartPoint] = useState(null);
     // state bentuk array isinya player 1 & 2
@@ -15,6 +15,8 @@ export default function GridBoard({socket, roomId, players}) {
     const [foundPath, setFoundPath] = useState(null);
     const [gridMap, setGridMap] = useState(null);
     const [pathCount, setPathCount] = useState(null);
+
+    const [isMultiPlayer, setIsMultiPlayer] = useState(false);
 
     const [cellsScanned, setCellsScanned] = useState(0);
     const [cellsTraveled, setCellsTraveled] = useState(0);
@@ -100,7 +102,15 @@ export default function GridBoard({socket, roomId, players}) {
 
     const visualizeAlgo = () => {
         grid = gridBoardCells.current;
-        let start = grid[startPoint.row][startPoint.col];
+        
+        // if(roomId){
+
+        // } else {
+
+        // }
+        console.log(startPoint, endPoint, 'ini');
+
+        let start = grid[startPoint[0].row][startPoint[0].col];
         let end = grid[endPoint.row][endPoint.col];
         let visitedCells = [];
 
@@ -121,12 +131,22 @@ export default function GridBoard({socket, roomId, players}) {
     const handleGenerateMaze = () => {
         setRenderFlag(!renderFlag);
         clearBoard(); // just to be sure that board and path is cleared
-        const startAndEndPoint = generateRandomMaze(gridBoardCells.current,
-        true,
-        2  
+        let playerCount;
+        if (roomId) {
+            setIsMultiPlayer(true);
+            playerCount = 2;
+        } else {
+            setIsMultiPlayer(false);
+            playerCount = 1;
+        }
+
+        const startAndEndPoint = generateRandomMaze(
+            gridBoardCells.current,
+            isMultiPlayer,
+            playerCount
         );
 
-        const gridBoard = gridBoardCells.current
+        const gridBoard = gridBoardCells.current;
         socket.emit("playGame", { startAndEndPoint, roomId, gridBoard });
 
         setStartPoint(startAndEndPoint.startCellArr);
@@ -152,7 +172,7 @@ export default function GridBoard({socket, roomId, players}) {
         socket.on("playGame", (roomData) => {
             setRenderFlag(!renderFlag);
             clearBoard();
-            console.log(roomData, 'room data');
+            console.log(roomData, "room data");
             setStartPoint(roomData.startAndEndPoint.startCellArr);
             setEndPoint(roomData.startAndEndPoint.endCell);
             setGridMap({ current: roomData.gridBoard });

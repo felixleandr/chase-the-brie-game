@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
 import socket from "../config";
+import Swal from "sweetalert2";
+import Jeremy from '../assets/Jeremy.png'
 
 
 function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
     const [players, setPlayers] = useState([
         {
             name: "budi",
-            row: 1,
-            col: 1,
+            row: null,
+            col: null,
         },
         {
-            name: "azka",
-            row: 2,
-            col: 1,
+            name: "kaka",
+            row: null,
+            col: null,
         },
     ]);
+
+    const [isStart, setIsStart] = useState(false)
     // console.log(startPoint, 'start point');
     let [playerPathCount, setCount] = useState(null);
     const [currentPlayerName, setCurrentPlayerName] = useState(
@@ -27,13 +31,16 @@ function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
         row: null,
         col: null,
     });
+
     useEffect(() => {
         if (startPoint) {
-            let newPlayers = playersData?.map((el, idx) => {
+            setIsStart(true)
+            let newPlayers = playersData.map((el, idx) => {
                 el.row = startPoint[idx].row
                 el.col = startPoint[idx].col
                 return el
             })
+
             setPlayers(newPlayers);
             socket.emit("updatePlayer", {newPlayers, roomId})
 
@@ -43,7 +50,6 @@ function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
         })
 
     }, [startPoint]);
-
 
     useEffect(() => {
         // console.log(pathCount, 'iniii');
@@ -59,6 +65,7 @@ function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
 
         if (startPoint) {
             let index = players.findIndex((x) => x.name === currentPlayerName);
+
             let newPosition = { ...players[index]};
 
             // HANDLE ARROW KEY
@@ -101,7 +108,7 @@ function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
 
                 if (playerPathCount <= path.length) {
                     // useDispatch(incrementWins({gameType: 'singlePlayerWin'}))
-                    incrementUserWin();
+                    // incrementUserWin();
                     Swal.fire({
                         title: "Congrats ! You Win !",
                         width: 500,
@@ -137,10 +144,7 @@ function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
     };
 
     const isWallAtPosition = (row, col) => {
-
         const cell = gridMap[row][col];
-
-
         const isWall = cell.isWall;
         // console.log("is wall : " ,isWall );
         return isWall;
@@ -149,7 +153,7 @@ function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
     return (
         <>
             <div className="absolute top-0 left-0 right-0 bottom-0">
-                {players?.map((player) => {
+            {isStart ? players?.map((player) => {
                     return (
                         <img
                             style={{
@@ -158,13 +162,13 @@ function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
                                 position: "absolute",
                                 marginLeft: -5,
                             }}
-                            width="18"
-                            height="18"
-                            src="https://img.icons8.com/emoji/48/mouse-body-emoji.png"
+                            width="22"
+                            height="22"
+                            src={Jeremy}
                             alt="external-mouse-toy-pet-shop-yogi-aprelliyanto-outline-color-yogi-aprelliyanto"
                         />
                     );
-                })}
+                }) : "" }
             </div>
         </>
     );
