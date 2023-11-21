@@ -3,28 +3,22 @@ require("dotenv").config();
 
 const env = process.env.NODE_ENV || 'development';
 
-let uri;
-// console.log(process.env.MONGO_TESTING_URI);
+let uri = process.env.MONGO_CONNECTION
+let dbName = "ChaseTheBrie"
 
 if(env === 'test') {
   uri = process.env.MONGO_TESTING_URI
-} else {
-  uri =  process.env.MONGO_CONNECTION 
-}
-
+  dbName = "ChaseTheBrie_test"
+} 
 const client = new MongoClient(uri);
 
 let db;
 async function connect() {
-  console.log('masuk sini');
   try {
-    console.log('masuk sini juga');
     await client.connect();
-    console.log('test');
-    db = client.db("ChaseTheBrie");
-    console.log(db, '>>>>');
+    db = client.db(dbName);
   } catch (err) {
-    console.log(err, 'ini error');
+    console.log(err);
   }
 }
 

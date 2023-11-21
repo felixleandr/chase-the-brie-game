@@ -6,6 +6,8 @@ import Cell from "./Cell";
 export default function GridBoard() {
   const gridBoardCells = useRef(getCellObjects());
   const [startPoint, setStartPoint] = useState(null);
+  // state bentuk array isinya player 1 & 2
+  // menerima state isMultiplayer
   const [endPoint, setEndPoint] = useState(null);
   const [renderFlag, setRenderFlag] = useState(false);
   const [foundPath, setFoundPath] = useState(null);

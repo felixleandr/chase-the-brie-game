@@ -4,6 +4,8 @@ import { Link } from "react-router-dom"
 function WaitingRoom ({toggle}) {
     const [ready, setReady] = useState(false)
     const [style, setStyle] = useState('bg-lime-300 rounded-lg px-2 py-[2px] text-blue-900')
+    const [isMultiplayer, setIsMultiplayer] = useState(false)
+    let i = 1
 
    const [cancel, setCancel] = useState(false)
 
@@ -11,9 +13,11 @@ function WaitingRoom ({toggle}) {
     const nonActive = 'bg-lime-300 rounded-lg px-2 py-[2px] text-blue-900'
 
     const toggleReady = () => {
+
         setReady(!ready)
         ready ? setStyle(active) : setStyle(nonActive)
     }
+
 
     const closePopUp = () => {
         toggle()
@@ -27,15 +31,8 @@ function WaitingRoom ({toggle}) {
                         <div className='bg-white w-[60%] h-[1px]'></div>
                         <div className='flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]'>
                             <div className='flex gap-5'>
-                                <p>1.</p>
-                                <p>felix</p>
-                            </div>
-                            <button className={style} onClick={toggleReady}>Ready</button>
-                        </div>
-                        <div className='flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]'>
-                            <div className='flex gap-5'>
-                                <p>1.</p>
-                                <p>felix</p>
+                                <p>{i}.</p>
+                                <p>{localStorage.user}</p>
                             </div>
                             <button className={style} onClick={toggleReady}>Ready</button>
                         </div>

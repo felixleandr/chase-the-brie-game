@@ -3,6 +3,8 @@ import Swal from "sweetalert2";
 import { getCellObjects, getPath } from "../utils/helpers";
 import iconsMouse from '../assets/icons8-mouse-toy-64.png'
 import iconsCheese from '../assets/icons8-cheese-64.png'
+import { incrementWins } from "../store/actionCreator";
+import { useDispatch } from "react-redux";
 
 export default function Cell({
   isStartPoint,
@@ -33,10 +35,16 @@ export default function Cell({
 
   let newPosition = { ...startPointPosition };
 
-  // useEffect(() => {
-  //   console.log(col, row, isStartPoint, 'this');
-  //   console.log(startPointPosition, 'start point');
-  // })
+  const dispatch = useDispatch()
+
+  const incrementUserWin = async () => {
+    try {
+      await dispatch(incrementUserWin({gameType: 'singlePlayerWin'}))
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     // console.log(pathCount, 'iniii');
     document.addEventListener("keydown", handleKeyPress);
@@ -82,6 +90,8 @@ export default function Cell({
         console.log(path.length, 'papapapa');
         console.log(playerPathCount, 'pasangan papapapa');
         if(playerPathCount <= path.length){
+          // useDispatch(incrementWins({gameType: 'singlePlayerWin'})) 
+          incrementUserWin()
           Swal.fire({
             title: "Congrats ! You Win !",
             width: 500,

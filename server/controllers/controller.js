@@ -1,4 +1,4 @@
-const { hashPass, comparePass, createToken } = require("../helpers/auth");
+const { hashPass, comparePass, createToken, verifyToken } = require("../helpers/auth");
 const User = require("../model/user");
 
 class Controller {
@@ -22,14 +22,12 @@ class Controller {
 
       res.status(201).json({ message: `${newUser.username} has been added` });
     } catch (err) {
-      console.log(err);
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
 
   static async login(req, res, next) {
     try {
-      console.log(2222);
       const { email, password } = req.body;
       if (!email) {
         return res.status(400).json({ message: "Email is required" });
@@ -45,11 +43,12 @@ class Controller {
       const id = user._id;
       const idString = id.toHexString();
 
+      let access_token = createToken({id : idString})
+
       res
         .status(200)
-        .json({ access_token: createToken({ id: idString }), user });
+        .json({ access_token, user });
     } catch (err) {
-      console.log(err);
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
@@ -59,7 +58,6 @@ class Controller {
       const users = await User.findAll();
       res.status(200).json(users);
     } catch (err) {
-      console.log(err);
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
@@ -70,21 +68,20 @@ class Controller {
       const user = await User.findById(_id);
       res.status(200).json(user);
     } catch (err) {
-      console.log(err);
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
 
-  static async deleteUser(req, res) {
-    try {
-      const { _id } = req.params;
-      const user = await User.deleteUser(_id);
-      res.status(200).json(user);
-    } catch (err) {
-      console.log(err);
-      res.status(500).json({ message: "Internal Server Error" });
-    }
-  }
+  // static async deleteUser(req, res) {
+  //   try {
+  //     const { _id } = req.params;
+  //     const user = await User.deleteUser(_id);
+  //     res.status(200).json(user);
+  //   } catch (err) {
+  //     console.log(err);
+  //     res.status(500).json({ message: "Internal Server Error" });
+  //   }
+  // }
 
   static async incrementWins(req,res){
     try {
@@ -99,9 +96,8 @@ class Controller {
       }
 
       const result = await User.incrementWins(_id, gameType);
-      res.status(500).json({ result, message: `${gameType} wins incremented successfully` });
+      res.status(200).json({ result, message: `${gameType} wins incremented successfully` });
     } catch (error) {
-      console.log(err);
       res.status(500).json({ message: "Internal Server Error" });
     }
   }

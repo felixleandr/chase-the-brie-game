@@ -6,9 +6,9 @@ const { connect } = require("./config/mongo");
 const cors = require("cors");
 const router = require("./routes");
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
 app.get("/", (_, res) => res.json("Welcome to our server"));
 
 app.use(router);
@@ -23,4 +23,6 @@ app.use(router);
 //       console.log("app connected to " + port);
 //     });
 // });
+
+module.exports = app
 

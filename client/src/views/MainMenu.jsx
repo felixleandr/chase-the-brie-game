@@ -10,7 +10,8 @@ function MainMenu() {
     const [leaderboard, setLeaderboard] = useState(false)
     const navigate = useNavigate();
 
-    const togglePopUp = () => {
+    const togglePopUp = (player) => {
+        console.log(player, 'player');
         setWaitingRoom(!waitingRoom)
     }
 

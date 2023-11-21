@@ -1,6 +1,27 @@
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { fetchAllUsers } from "../store/actionCreator";
+import { useEffect } from "react";
 
 function Leaderboard({toggle}) {
+    const users = useSelector((state) => {
+        return state.users;
+    })
+
+    const dispatch = useDispatch();
+
+    const fetchData = async () => {
+        try {
+            await dispatch(fetchAllUsers())
+        } catch (err) {
+            console.log(err);
+        } 
+    }
+
+    useEffect(() => {
+        fetchData()
+    },[])
+
     function closePopUp() {
         toggle();
     }
@@ -18,44 +39,23 @@ function Leaderboard({toggle}) {
                                 <p>No.</p>
                                 <p>Name</p>
                             </div>
-                            <p>Points</p>
+                            <p className="text-sm tracking-tighter">SP Win</p>
+                            <p className="text-sm tracking-tighter">MP Win</p>
                         </div>
                         <div className="bg-white w-full h-[1px]"></div>
-                        <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
-                            <div className="flex gap-5">
-                                <p>1.</p>
-                                <p>felix</p>
+                        {users.map((user, idx) =>{
+                            return (
+                                <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
+                                <div className="flex gap-5">
+                                    <p>{idx + 1}</p>
+                                    <p>{user.username}</p>
+                                </div>
+                                <p>{user.singlePlayerWin}</p>
+                                <p>{user.multiPlayerWin}</p>
                             </div>
-                            <p>100</p>
-                        </div>
-                        <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
-                            <div className="flex gap-5">
-                                <p>2.</p>
-                                <p>felix</p>
-                            </div>
-                            <p>90</p>
-                        </div>
-                        <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
-                            <div className="flex gap-5">
-                                <p>2.</p>
-                                <p>felix</p>
-                            </div>
-                            <p>90</p>
-                        </div>
-                        <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
-                            <div className="flex gap-5">
-                                <p>2.</p>
-                                <p>felix</p>
-                            </div>
-                            <p>90</p>
-                        </div>
-                        <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
-                            <div className="flex gap-5">
-                                <p>2.</p>
-                                <p>felix</p>
-                            </div>
-                            <p>90</p>
-                        </div>
+                            )
+                        })}
+                       
                     </div>
 
                     <div className="w-full flex justify-evenly py-5">
