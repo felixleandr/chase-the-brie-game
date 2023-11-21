@@ -98,9 +98,9 @@ export default function GridBoard() {
     setTimeTaken(BFSTime || 0);
 
     const path = getPath(end);
-    console.log(path, 'padang');
     // console.log(visitedCells, path, 'inii visitedcells');
     setCellsScanned(visitedCells.length);
+    console.log(visitedCells, path, 'animate algo');
     animateAlgo(visitedCells, path);
     return path
   };
@@ -113,7 +113,6 @@ export default function GridBoard() {
     setStartPoint(startAndEndPoint.startCell)
     setEndPoint(startAndEndPoint.endCell)
     setGridMap(gridBoardCells.current)
-
   }
 
   useEffect(() => {

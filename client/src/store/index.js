@@ -5,7 +5,8 @@ const initialState = {
     loginData: {},
     registerData: {},
     users: [],
-    user: {}
+    user: {},
+    userWin: {} 
 };
 
 function rootReducer(state = initialState, action) {
@@ -17,6 +18,8 @@ function rootReducer(state = initialState, action) {
         case "user_fetch_success":
             return { users: action.payload };
         case "userById_fetch_success":
+            return { user: action.payload };
+        case "userWin_patch_success":
             return { user: action.payload };
         default:
             return state;

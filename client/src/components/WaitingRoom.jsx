@@ -13,7 +13,6 @@ function WaitingRoom ({toggle}) {
     const nonActive = 'bg-lime-300 rounded-lg px-2 py-[2px] text-blue-900'
 
     const toggleReady = () => {
-
         setReady(!ready)
         ready ? setStyle(active) : setStyle(nonActive)
     }

@@ -110,9 +110,8 @@ export function incrementWins(gameType){
             if(!response.ok){
                 throw resData
             }
-            console.log('masuk patch');
             fetchUserById()
-            return resData
+            return dispatch({type: 'userWin_patch_success', payload: resData})
         } catch (error) {
             throw error
         }

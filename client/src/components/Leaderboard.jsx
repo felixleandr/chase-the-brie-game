@@ -43,7 +43,7 @@ function Leaderboard({toggle}) {
                             <p className="text-sm tracking-tighter">MP Win</p>
                         </div>
                         <div className="bg-white w-full h-[1px]"></div>
-                        {users.map((user, idx) =>{
+                        {users?.map((user, idx) =>{
                             return (
                                 <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
                                 <div className="flex gap-5">

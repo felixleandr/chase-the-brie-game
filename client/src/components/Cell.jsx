@@ -37,9 +37,9 @@ export default function Cell({
 
   const dispatch = useDispatch()
 
-  const incrementUserWin = async () => {
+  const incrementUserWin = () => {
     try {
-      await dispatch(incrementUserWin({gameType: 'singlePlayerWin'}))
+      dispatch(incrementUserWin({gameType: 'singlePlayerWin'}))
     } catch (error) {
       console.log(error);
     }
