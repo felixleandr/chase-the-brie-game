@@ -27,34 +27,38 @@ function Leaderboard({toggle}) {
     }
     return (
         <>
-            <div className="w-[590px] h-[590px] bg-slate-950 rounded-[50px] fixed items-center font-Rubik px-9 py-10">
+            <div className="w-[900px] h-[600px] bg-slate-950 rounded-[50px] fixed items-center font-Rubik px-9 py-10 border-lime-300 border">
                 <div className="flex flex-col justify-between items-center h-full w-full">
-                    <div className="w-full justify-center flex flex-col items-center">
+                    <div className="w-full justify-center flex flex-col items-center overflow-hidden">
                         <p className="text-gray-300 text-3xl text-center">
                             Leaderboard
                         </p>
-                        <div className="bg-white w-[60%] h-[1px]"></div>
+                        <div className="bg-white w-[40%] h-[1px]"></div>
                         <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
                             <div className="flex gap-5">
                                 <p>No.</p>
                                 <p>Name</p>
                             </div>
-                            <p className="text-sm tracking-tighter">SP Win</p>
-                            <p className="text-sm tracking-tighter">MP Win</p>
+                            <p className="text-sm tracking-tighter">Single Player Win</p>
+                            <p className="text-sm tracking-tighter">Multiplayer Win</p>
+                            <p className="text-sm tracking-tighter">Total Win</p>
                         </div>
                         <div className="bg-white w-full h-[1px]"></div>
-                        {users?.map((user, idx) =>{
-                            return (
+                        <div className="flex flex-col items-center overflow-auto w-full">
+                            {users?.map((user, idx) =>{
+                                return (
                                 <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
-                                <div className="flex gap-5">
-                                    <p>{idx + 1}</p>
-                                    <p>{user.username}</p>
+                                    <div className="flex gap-5">
+                                        <p>{idx + 1}</p>
+                                        <p>{user.username}</p>
+                                    </div>
+                                    <p className="text-center">{user.singlePlayerWin}</p>
+                                    <p>{user.multiPlayerWin}</p>
+                                    <p>{user.multiPlayerWin + user.singlePlayerWin}</p>
                                 </div>
-                                <p>{user.singlePlayerWin}</p>
-                                <p>{user.multiPlayerWin}</p>
-                            </div>
-                            )
-                        })}
+                                )
+                            })}
+                        </div>
                        
                     </div>
 
