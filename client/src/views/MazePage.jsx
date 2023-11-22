@@ -4,7 +4,7 @@ import background from "../assets/background.jpg";
 import GridBoard from "../components/GridBoard";
 import PlayerInfo from "../components/PlayerInfo";
 
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import socket from "../config";
 
@@ -33,9 +33,12 @@ function MazePage() {
     console.log(players, 'dari maze page ');
 
     return (
-        <>
+        <>  
+         <div className="absolute top-2 left-10 z-10 text-white font-Rubik">
+            <Link to={'/main-menu'}>Main Menu</Link>
+         </div>
             <div
-                className="w-full max-w-[100vw] flex flex-col justify-center items-center"
+                className="w-full max-w-[100vw] min-h-screen flex flex-col justify-center items-center"
                 style={{
                     objectFit: "cover",
                     backgroundImage: `url("${background}")`,
@@ -45,7 +48,7 @@ function MazePage() {
                 <div className="px-16 py-11">
                     <GameSettings />
                     <div className="bg-slate-900 py-5 px-5 pb-10">
-                        <PlayerInfo />
+                        <PlayerInfo roomId={roomId}/>
                         <GridBoard 
                         socket={socket} 
                         roomId={roomId}

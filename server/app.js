@@ -19,6 +19,20 @@ app.get("/", (_, res) => res.json("Welcome to our server"));
 
 app.use(router);
 
+// app.patch('/cors', (req, res) => {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length,Server,Date,access-control-allow-methods,access-control-allow-origin");
+//   res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS,PATCH");
+//   res.send('ok')
+// })
+// app.options('/*', (req, res) => {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length,Server,Date,access-control-allow-methods,access-control-allow-origin");
+//   res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS,PATCH");
+//   res.send('send some thing whatever')
+// })
+
+
 io.on("connection", (socket) => {
     console.log("a user connected");
   
@@ -43,9 +57,12 @@ io.on("connection", (socket) => {
         console.log(payload, "di server");
         socket.broadcast.to(payload.roomId).emit("changePosition", payload);
       });
+
+    socket.on('playerWinAnnouncement', ({currentPlayerName, roomId})=> {
+      console.log(currentPlayerName, roomId, 'server emit');
+      socket.broadcast.to(roomId).emit('playerWinAnnouncement', currentPlayerName)
+    })
   });
-
-
   
   connect().then((db) => {
     console.log("success to connect to mongo");

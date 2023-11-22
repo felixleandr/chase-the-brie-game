@@ -33,7 +33,7 @@ function RegisterPop() {
         email: "",
         password: "",
       });
-      nav("/main-menu");
+      nav("/login");
       //tambahin toast/alert success
     } catch (error) {
       console.log(error?.message ? error?.message : error);

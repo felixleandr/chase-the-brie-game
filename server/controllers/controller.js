@@ -19,8 +19,9 @@ class Controller {
         ...req.body,
         password: hashPass(req.body.password),
       });
+      console.log(newUser, 'new user');
 
-      res.status(201).json({ message: `${newUser.username} has been added` });
+      res.status(201).json({ message: `${newUser.username} has been added`, newUser});
     } catch (err) {
       res.status(500).json({ message: "Internal Server Error" });
     }
@@ -86,7 +87,7 @@ class Controller {
   static async incrementWins(req,res){
     try {
       const _id = req.user._id 
-
+      console.log(req.body);
       //gameType isinya singlePlayer atau multiPlayer
       //dari client ngirim gameType = "singlePlayerWin" atau "multiPlayerWin" di body
       const { gameType } = req.body;

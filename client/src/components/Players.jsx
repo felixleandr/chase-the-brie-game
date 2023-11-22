@@ -1,10 +1,21 @@
 import { useEffect, useState } from "react";
 import socket from "../config";
 import Swal from "sweetalert2";
-import Jeremy from '../assets/Jeremy.png'
+import Jeremy from "../assets/Jeremy.png";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { incrementWins } from "../store/actionCreator";
 
-
-function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
+function Players({
+    startPoint,
+    endPoint,
+    gridMap,
+    visualizeAlgo,
+    roomId,
+    playersData,
+    generateRandomMaze,
+    handleGenerateMaze,
+}) {
     const [players, setPlayers] = useState([
         {
             name: "budi",
@@ -18,14 +29,17 @@ function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
         },
     ]);
 
-    const [isStart, setIsStart] = useState(false)
-    // console.log(startPoint, 'start point');
-    let [playerPathCount, setCount] = useState(null);
+    const navigate = useNavigate();
+    const [isStart, setIsStart] = useState(false);
+    const [gameType, setGameType] = useState(null)
+    const dispatch = useDispatch();
+    let [playerPathCount, setCount] = useState(0);
+
     const [currentPlayerName, setCurrentPlayerName] = useState(
         localStorage.user
     ); //localStorage.user
 
-    const [pathCount, setPathCount] = useState(null);
+    const [pathCount, setPathCount] = useState(0);
 
     const [startPointPosition, setStartPointPosition] = useState({
         row: null,
@@ -33,26 +47,29 @@ function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
     });
 
     useEffect(() => {
+        setCount(0);
         if (startPoint) {
-            setIsStart(true)
+            setIsStart(true);
             let newPlayers = playersData.map((el, idx) => {
-                el.row = startPoint[idx].row
-                el.col = startPoint[idx].col
-                return el
-            })
+                el.row = startPoint[idx].row;
+                el.col = startPoint[idx].col;
+                return el;
+            });
 
             setPlayers(newPlayers);
-            socket.emit("updatePlayer", {newPlayers, roomId})
-
+            // socket.emit("updatePlayer", { newPlayers, roomId });
         }
         socket.on("updatePlayer", (newPlayers) => {
-            setPlayers(newPlayers)
+            setPlayers(newPlayers);
+        });
+
+        socket.on('playerWinAnnouncement', (currentPlayerName) => {
+          Swal.fire(`${currentPlayerName} win !`)
         })
 
     }, [startPoint]);
 
     useEffect(() => {
-        // console.log(pathCount, 'iniii');
         document.addEventListener("keydown", handleKeyPress);
 
         return () => {
@@ -60,55 +77,83 @@ function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
         };
     });
 
+    const incrementUserWin = async () => {
+        try {
+          if(!roomId){
+            await dispatch(incrementWins({ gameType: "singlePlayerWin" }));
+          } else {
+            console.log('masuk sini');
+            await dispatch(incrementWins({gameType: "multiPlayerWin"}))
+          }
+        } catch (error) {
+            console.log(error);
+        }
+    };
     const handleKeyPress = (event) => {
-        console.log(event.key);
-
         if (startPoint) {
             let index = players.findIndex((x) => x.name === currentPlayerName);
 
-            let newPosition = { ...players[index]};
+            let newPosition = { ...players[index] };
 
             // HANDLE ARROW KEY
             switch (event.key) {
                 case "ArrowLeft":
                     newPosition.col -= 1;
-                    // setCount(playerPathCount + 1);
+                    setCount(playerPathCount + 1);
                     break;
                 case "ArrowRight":
                     newPosition.col += 1;
-
-                    // setCount(playerPathCount + 1);
+                    setCount(playerPathCount + 1);
 
                     break;
                 case "ArrowUp":
                     newPosition.row -= 1;
-                    // setCount(playerPathCount + 1);
+                    setCount(playerPathCount + 1);
 
                     break;
                 case "ArrowDown":
                     newPosition.row += 1;
-                    // setCount(playerPathCount + 1);
+                    setCount(playerPathCount + 1);
                     break;
                 default:
                     return;
             }
-           
-
+            // console.log(playerPathCount, 'count path player');
             // COLLLISION
+            let newPlayers;
             if (!isWallAtPosition(newPosition.row, newPosition.col)) {
-                let newPlayers = [...players];
-                newPlayers[index] = newPosition;
-                setPlayers(newPlayers);
+              newPlayers = [...players];
+              newPlayers[index] = newPosition;
+              setPlayers(newPlayers);
+              
+              socket.emit("updatePlayer", { newPlayers, roomId });
+              
+            }
 
-                socket.emit('updatePlayer', {newPlayers, roomId})
+            if(roomId){
+              if(endPoint.col === newPosition.col && endPoint.row === newPosition.row){
+                Swal.fire(`${currentPlayerName} win !`)
+                socket.emit('playerWinAnnouncement', {currentPlayerName, roomId})
+                incrementUserWin()
+              }
             }
 
             if (isTargetAtPosition(newPosition.row, newPosition.col)) {
                 let path = visualizeAlgo();
+                if(roomId){
+                  if(endPoint.col === newPosition.col && endPoint.row === newPosition.row){
+                    Swal.fire(`${currentPlayerName} win !`)
+                    socket.emit('playerWinAnnouncement', {currentPlayerName, roomId})
+                  }
+                } else {
+                  if (playerPathCount === path.length - 2 ) {
+                    //kurangin 2, karena start and end point tidak di hitung
 
-                if (playerPathCount <= path.length) {
-                    // useDispatch(incrementWins({gameType: 'singlePlayerWin'}))
-                    // incrementUserWin();
+                    if (roomId) {
+                        socket.emit("updatePlayer", { newPlayers, roomId });
+                    }
+
+                    incrementUserWin();
                     Swal.fire({
                         title: "Congrats ! You Win !",
                         width: 500,
@@ -120,18 +165,39 @@ function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
                     no-repeat
                   `,
                     });
-                } else {
+                    setCount(0);
+                  } else {
                     Swal.fire({
-                        title: "Sorry, Try Again !",
+                        customClass: {
+                            denyButtonText: "swal2-denyButtonText",
+                        },
+                        title: "Sorry, You Lose !",
+                        text: `Your path is : ${playerPathCount}, Shortest path is : ${path.length - 2}`,
                         width: 500,
                         padding: "3em",
                         color: "#716add",
                         backdrop: `
-                    rgba(25,72,98);
-                    left top
-                    no-repeat
-                  `,
+                      rgba(25,72,98);
+                      left top
+                      no-repeat`,
+                        showDenyButton: true,
+                        confirmButtonColor: "#6D27D9",
+                        // denyButtonColor: "#d33",
+                        confirmButtonText: "Try Again",
+                        denyButtonText: "Back To Main Menu",
+                        denyButtonColor: "#F26379",
+                        reverseButtons: true,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            handleGenerateMaze();
+                            setCount(0);
+                            // navigate("/maze");
+                        } else if (result.isDenied) {
+                            navigate("/main-menu");
+                            setCount(0);
+                        }
                     });
+                  }
                 }
             }
         }
@@ -153,22 +219,30 @@ function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
     return (
         <>
             <div className="absolute top-0 left-0 right-0 bottom-0">
-            {isStart ? players?.map((player) => {
-                    return (
-                        <img
-                            style={{
-                                left: 24 * (player.col + 1),
-                                top: 24 * player.row,
-                                position: "absolute",
-                                marginLeft: -5,
-                            }}
-                            width="22"
-                            height="22"
-                            src={Jeremy}
-                            alt="external-mouse-toy-pet-shop-yogi-aprelliyanto-outline-color-yogi-aprelliyanto"
-                        />
-                    );
-                }) : "" }
+                {isStart
+                    ? players?.map((player) => {
+                          return (
+                              <div
+                                  style={{
+                                      left: 24 * (player.col + 1),
+                                      top: 24 * player.row,
+                                      position: "absolute",
+                                      marginLeft: -5,
+                                  }}
+                              >
+                                  <span className="bg-lime-300 animate-bounce text-xs text-violet-900 px-2 rounded-md absolute -top-3">
+                                      {player.name}
+                                  </span>
+                                  <img
+                                      width="22"
+                                      height="22"
+                                      src={Jeremy}
+                                      alt="external-mouse-toy-pet-shop-yogi-aprelliyanto-outline-color-yogi-aprelliyanto"
+                                  />
+                              </div>
+                          );
+                      })
+                    : ""}
             </div>
         </>
     );

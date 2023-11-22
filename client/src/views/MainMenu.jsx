@@ -49,12 +49,12 @@ function MainMenu() {
                             <div className="bg-white w-[100%] h-[1px]"></div>
                         </div>
                         <div className="flex flex-col gap-9 mt-[100px] text-gray-300 text-xl">
-                            <button
+                            <Link
                                 className="hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl"
-                                onClick={togglePopUp}
+                                to={'/maze'}
                             >
                                 Single Player
-                            </button>
+                            </Link>
                             <button
                                 className="hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl"
                                 onClick={toggleJoinRoom}
@@ -75,7 +75,7 @@ function MainMenu() {
                             </button>
                         </div>
                     </div>
-                    {waitingRoom && <WaitingRoom toggle={togglePopUp} />}
+                    {/* {waitingRoom && <WaitingRoom toggle={togglePopUp} />} */}
                     {leaderboard && <Leaderboard toggle={toggleLeaderboard} />}
                     {joinRoom && (
                         <JoinRoom

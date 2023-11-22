@@ -16,10 +16,10 @@ export function generateRandomMaze(grid, isMultiPlayer, playerCount) {
 
     // Define quadrant information
     const quadrants = [
-        { colRange: [26, 51], rowRange: [0, 14] }, // Quadrant 1
-        { colRange: [0, 25], rowRange: [0, 14] }, // Quadrant 2
-        { colRange: [0, 25], rowRange: [15, 29] }, // Quadrant 3
-        { colRange: [26, 51], rowRange: [15, 29] }, // Quadrant 4
+        { colRange: [20, 39], rowRange: [0, 9] }, // Quadrant 1
+        { colRange: [0, 19], rowRange: [0, 9] }, // Quadrant 2
+        { colRange: [0, 19], rowRange: [10, 19] }, // Quadrant 3
+        { colRange: [20, 39], rowRange: [10, 19] }, // Quadrant 4
     ];
 
     const startQuadrantIndex = Math.floor(Math.random() * quadrants.length);
