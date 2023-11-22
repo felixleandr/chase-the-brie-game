@@ -40,9 +40,6 @@ export default function Cell({
   const gridBoardCells = useRef(getCellObjects());
 
   let newPosition = { ...startPointPosition };
-
-  const dispatch = useDispatch()
-  console.log('rerender');
   
   return (
     <>

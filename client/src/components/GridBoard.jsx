@@ -191,12 +191,13 @@ export default function GridBoard({ socket, roomId, players }) {
                     >
                         Generate random maze
                     </button>
-                    <button
+                    {!isMultiPlayer && <button
                         onClick={() => visualizeAlgo()}
                         className="items-center w-fit disabled:bg-indigo-400 disabled:cursor-not-allowed inline-flex bg-lime-300 text-[15px] text-indigo-800 px-4 py-2 rounded-md"
                     >
                         Give Up
-                    </button>
+                    </button>}
+
                 </div>
             </div>
             <div className="grid grid-cols-gridmap relative overflow-auto w-full px-4 justify-start md:justify-center items-center my-3">
