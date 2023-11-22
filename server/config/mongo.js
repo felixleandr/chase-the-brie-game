@@ -1,14 +1,22 @@
 const { MongoClient } = require("mongodb");
+require("dotenv").config();
 
-const uri =  process.env.MONGO_CONNECTION || "mongodb://127.0.0.1:27017" ;
+const env = process.env.NODE_ENV || 'development';
 
+let uri = process.env.MONGO_CONNECTION
+let dbName = "ChaseTheBrie"
+
+if(env === 'test') {
+  uri = process.env.MONGO_TESTING_URI
+  dbName = "ChaseTheBrie_test"
+} 
 const client = new MongoClient(uri);
 
 let db;
 async function connect() {
   try {
     await client.connect();
-    db = client.db("ChaseTheBrie");
+    db = client.db(dbName);
   } catch (err) {
     console.log(err);
   }

@@ -8,10 +8,14 @@ class User {
       const users = getDb().collection("users");
       const data = await users
         .find({}, { projection: { password: 0 } })
+        .sort({singlePlayerWin : -1})
         .toArray();
+      data.map(el => {
+        el.totalWins = 0
+        return el
+      })
       return data;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -22,7 +26,6 @@ class User {
       const user = await users.findOne({ _id: new ObjectId(_id) });
       return user;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -33,7 +36,6 @@ class User {
       const user = await users.findOne({ email: email });
       return user;
     } catch (err) {
-      console.log(err);
       throw err;
     }
   }
@@ -49,7 +51,6 @@ class User {
         _id: new ObjectId(newUser.insertedId),
       });
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -65,22 +66,21 @@ class User {
         { $inc: { [columnToUpdate]: 1 } }
       );
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
 
-  static async deleteUser(_id) {
-    try {
-      const user = getDb().collection("users");
-      const data = await user.deleteOne({
-        _id: new ObjectId(_id),
-      });
-      return data;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
+  // static async deleteUser(_id) {
+  //   try {
+  //     const user = getDb().collection("users");
+  //     const data = await user.deleteOne({
+  //       _id: new ObjectId(_id),
+  //     });
+  //     return data;
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw error;
+  //   }
+  // }
 }
 module.exports = User;

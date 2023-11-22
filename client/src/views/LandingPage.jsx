@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Login from "../components/LoginPop";
-import SetupBar from "../components/SetupBar";
+import GameSettings from "../components/GameSettings";
 import { Link, Outlet } from "react-router-dom";
+import Tutorial from '../assets/tutorial.png'
 
 function LandingPage() {
   const [login, setLogin] = useState(false);
@@ -14,10 +15,10 @@ function LandingPage() {
   return (
     <>
       <div className="con">
+        <GameSettings/>
         <div className="section1">
           <div className="text">CHASE THE BRIE</div>
         </div>
-        <SetupBar />
         <div className="section2 flex justify-center">
           <div className="flex justify-center w-[1000px] mt-[100px] h-full">
             <div className="flex flex-col">
@@ -35,8 +36,8 @@ function LandingPage() {
               <div className="flex flex-col items-center mt-10">
                 <p className="font-Rubik text-white py-5">How to Play</p>
                 <img
-                  className="h-[500px]"
-                  src="https://d1ng1bucl7w66k.cloudfront.net/ghost-blog/2022/07/Screen-Shot-2022-07-20-at-9.09.39-PM.png"
+                  className="h-[600px]"
+                  src={Tutorial}
                   alt=""
                 />
               </div>

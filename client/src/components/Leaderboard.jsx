@@ -1,60 +1,81 @@
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { fetchAllUsers } from "../store/actionCreator";
+import { useEffect } from "react";
 
-function Leaderboard({toggle}) {
+function Leaderboard({ toggle }) {
+    const users = useSelector((state) => {
+        return state.users;
+    });
+
+    const dispatch = useDispatch();
+
+    const fetchData = async () => {
+        try {
+            await dispatch(fetchAllUsers());
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
     function closePopUp() {
         toggle();
     }
     return (
         <>
-            <div className="w-[590px] h-[590px] bg-slate-950 rounded-[50px] fixed items-center font-Rubik px-9 py-10">
+            <div className="w-[900px] h-[600px] bg-slate-950 rounded-[50px] fixed items-center  font-Rubik px-9 py-10 border-lime-300 border">
                 <div className="flex flex-col justify-between items-center h-full w-full">
-                    <div className="w-full justify-center flex flex-col items-center">
+                    <div className="w-full justify-center flex flex-col items-center overflow-hidden">
                         <p className="text-gray-300 text-3xl text-center">
                             Leaderboard
                         </p>
-                        <div className="bg-white w-[60%] h-[1px]"></div>
+                        <div className="bg-white w-[40%] h-[1px]"></div>
                         <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
-                            <div className="flex gap-5">
-                                <p>No.</p>
-                                <p>Name</p>
+                            <div className="flex flex-1 gap-5">
+                                <p className="flex-2">No.</p>
+                                <p className="flex-1">Name</p>
                             </div>
-                            <p>Points</p>
+                            <p className="text-sm tracking-tighter flex-1 text-center">
+                                Single Player Win
+                            </p>
+                            <p className="text-sm tracking-tighter flex-1 text-center">
+                                Multiplayer Win
+                            </p>
+                            <p className="text-sm tracking-tighter flex-1 text-center">
+                                Total Win
+                            </p>
                         </div>
                         <div className="bg-white w-full h-[1px]"></div>
-                        <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
-                            <div className="flex gap-5">
-                                <p>1.</p>
-                                <p>felix</p>
-                            </div>
-                            <p>100</p>
-                        </div>
-                        <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
-                            <div className="flex gap-5">
-                                <p>2.</p>
-                                <p>felix</p>
-                            </div>
-                            <p>90</p>
-                        </div>
-                        <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
-                            <div className="flex gap-5">
-                                <p>2.</p>
-                                <p>felix</p>
-                            </div>
-                            <p>90</p>
-                        </div>
-                        <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
-                            <div className="flex gap-5">
-                                <p>2.</p>
-                                <p>felix</p>
-                            </div>
-                            <p>90</p>
-                        </div>
-                        <div className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[40px]">
-                            <div className="flex gap-5">
-                                <p>2.</p>
-                                <p>felix</p>
-                            </div>
-                            <p>90</p>
+                        <div className="flex flex-col items-center overflow-auto w-full">
+                            {users?.filter((el) => 
+                                el.singlePlayerWin + el.multiPlayerWin > 0
+                            ).map((user, idx) => {
+                                return (
+                                    <div
+                                        key={idx}
+                                        className="flex justify-between items-center w-full font-Rubik text-gray-300 mt-[20px]"
+                                    >
+                                        <div className="flex gap-5 flex-1">
+                                            {" "}
+                                            {/* Added flex-1 to make it flexible */}
+                                            <p className="flex-2 text-center">{idx + 1}</p>
+                                            <p className="flex-1">{user?.username}</p>
+                                        </div>
+                                        <p className="text-center flex-1">
+                                            {user?.singlePlayerWin}
+                                        </p>
+                                        <p className="flex-1 text-center">{user?.multiPlayerWin}</p>
+                                        <p className="flex-1 text-center" >
+                                            {user?.multiPlayerWin +
+                                                user?.singlePlayerWin}
+                                        </p>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
 

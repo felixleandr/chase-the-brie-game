@@ -1,32 +1,64 @@
-import ToggleMusic from "../components/SetupBar"
-import background from '../assets/background.jpg'
+//buat di mazePage
+import GameSettings from "../components/GameSettings";
+import background from "../assets/background.jpg";
+import GridBoard from "../components/GridBoard";
+import PlayerInfo from "../components/PlayerInfo";
 
+import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import socket from "../config";
 
 function MazePage() {
-    return (
-        <>
-           <div className="w-full h-screen bg-gradient-to-r from-black to-regal-blue ... " background={background}>
-                <div>
-                    <img className="w-full h-screen brightness-50" src={background} alt=""/>
-                </div>
-                <ToggleMusic/>
-                <div className="bg-slate-900 w-[1300px] h-full top-20 left-20 py-5 mb-[100px] fixed z-10">
-                    <div className="flex justify-between items-center px-10 font-Rubik text-gray-300">
-                        <div className="flex gap-20">
-                            <p>Player: <span className="ml-10">Felix</span></p>
-                            <p>Total Win: <span className="ml-10">10</span></p>
-                        </div>
-                        <div>
-                            <button className="bg-lime-300 rounded-xl text-blue-900 px-3 py-1 hover:tracking-widest">Give Up</button>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-gridmap overflow-auto w-full px-4 justify-start md:justify-center items-center my-3">
+    const { roomId } = useParams();
+    const [players, setPlayers] = useState([]);
+    
+    useEffect(() => {
+        let player = { name: localStorage.user };
+        if (roomId) {
+            socket.emit("joinRoom", {
+                roomId,
+                access_token: "1223",
+                player,
+            });
+            
+            socket.on('joinRoom',(player) => {
+                setPlayers((previousPlayer) => {
+                    return [...previousPlayer, player]
+                })
+            } )
+        } else {
+            setPlayers([player])
+        }
+    }, [roomId]);
+    console.log(players, 'dari maze page ');
 
+    return (
+        <>  
+         <div className="absolute top-2 left-10 z-10 text-white font-Rubik">
+            <Link to={'/main-menu'}>Main Menu</Link>
+         </div>
+            <div
+                className="w-full max-w-[100vw] min-h-screen flex flex-col justify-center items-center"
+                style={{
+                    objectFit: "cover",
+                    backgroundImage: `url("${background}")`,
+                    backgroundRepeat: "no-repeat",
+                }}
+            >
+                <div className="px-16 py-11">
+                    <GameSettings />
+                    <div className="bg-slate-900 py-5 px-5 pb-10">
+                        <PlayerInfo roomId={roomId}/>
+                        <GridBoard 
+                        socket={socket} 
+                        roomId={roomId}
+                        players={players}
+                        ></GridBoard>
                     </div>
                 </div>
             </div>
         </>
-    )
+    );
 }
 
-export default MazePage
+export default MazePage;

@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { MdMusicNote, MdMusicOff } from "react-icons/md";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import backgroundMusic from "../assets/audio/Shortwire - Reconfig [PV].mp3";
+import Swal from "sweetalert2";
 
-function SetupBar() {
+function GameSettings() {
   const [music, setMusic] = useState(true);
   const musicRef = useRef(null);
   const location = useLocation();
@@ -11,17 +12,29 @@ function SetupBar() {
   const navigate = useNavigate();
 
   const signOut = () => {
-    localStorage.clear();
-    navigate("/");
+    Swal.fire({
+      title: "<h2>Are you sure?</h2>",
+      icon: "warning",
+      html: "You will be logged out",
+      showCancelButton: true,
+      focusConfirm: false,
+      confirmButtonText: "<span>Yes</span>",
+      confirmButtonColor: "#007EFF",
+      cancelButtonText: "<span>Cancel</span>",
+      cancelButtonColor: "#FF5564",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        navigate("/");
+      }
+    });
   };
 
   const toggleMusic = () => {
     setMusic(!music);
   };
 
-  useEffect(() => {
-    console.log(location.pathname);
-  }, [location.pathname]);
+  useEffect(() => {}, [location.pathname]);
 
   useEffect(() => {
     // Memainkan atau memberhentikan musik latar belakang saat komponen dimuat atau di-unmount
@@ -39,7 +52,7 @@ function SetupBar() {
 
   return (
     <>
-      <div className="absolute top-1 right-20">
+      <div className="absolute top-1 right-20 z-10">
         <div className="flex justify-between items-center gap-10 text-gray-300 font-Rubik">
           {music ? (
             <div className=" text-gray-300 font-Rubik">
@@ -68,4 +81,4 @@ function SetupBar() {
   );
 }
 
-export default SetupBar;
+export default GameSettings;
