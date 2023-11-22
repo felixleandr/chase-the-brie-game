@@ -1,177 +1,187 @@
 import { useEffect, useState } from "react";
 import socket from "../config";
 import Swal from "sweetalert2";
-import Jeremy from '../assets/Jeremy.png'
-
+import Jeremy from "../assets/Jeremy.png";
+import { useNavigate } from "react-router-dom";
 
 function Players({ startPoint, gridMap, visualizeAlgo, roomId, playersData }) {
-    const [players, setPlayers] = useState([
-        {
-            name: "budi",
-            row: null,
-            col: null,
-        },
-        {
-            name: "kaka",
-            row: null,
-            col: null,
-        },
-    ]);
+  const [players, setPlayers] = useState([
+    {
+      name: "budi",
+      row: null,
+      col: null,
+    },
+    {
+      name: "kaka",
+      row: null,
+      col: null,
+    },
+  ]);
 
-    const [isStart, setIsStart] = useState(false)
-    // console.log(startPoint, 'start point');
-    let [playerPathCount, setCount] = useState(null);
-    const [currentPlayerName, setCurrentPlayerName] = useState(
-        localStorage.user
-    ); //localStorage.user
+  const navigate = useNavigate();
+  const [isStart, setIsStart] = useState(false);
+  // console.log(startPoint, 'start point');
+  let [playerPathCount, setCount] = useState(null);
+  const [currentPlayerName, setCurrentPlayerName] = useState(localStorage.user); //localStorage.user
 
-    const [pathCount, setPathCount] = useState(null);
+  const [pathCount, setPathCount] = useState(null);
 
-    const [startPointPosition, setStartPointPosition] = useState({
-        row: null,
-        col: null,
+  const [startPointPosition, setStartPointPosition] = useState({
+    row: null,
+    col: null,
+  });
+
+  useEffect(() => {
+    if (startPoint) {
+      setIsStart(true);
+      let newPlayers = playersData.map((el, idx) => {
+        el.row = startPoint[idx].row;
+        el.col = startPoint[idx].col;
+        return el;
+      });
+
+      setPlayers(newPlayers);
+      socket.emit("updatePlayer", { newPlayers, roomId });
+    }
+    socket.on("updatePlayer", (newPlayers) => {
+      setPlayers(newPlayers);
     });
+  }, [startPoint]);
 
-    useEffect(() => {
-        if (startPoint) {
-            setIsStart(true)
-            let newPlayers = playersData.map((el, idx) => {
-                el.row = startPoint[idx].row
-                el.col = startPoint[idx].col
-                return el
-            })
+  useEffect(() => {
+    // console.log(pathCount, 'iniii');
+    document.addEventListener("keydown", handleKeyPress);
 
-            setPlayers(newPlayers);
-            socket.emit("updatePlayer", {newPlayers, roomId})
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  });
 
-        }
-        socket.on("updatePlayer", (newPlayers) => {
-            setPlayers(newPlayers)
-        })
+  const handleKeyPress = (event) => {
+    console.log(event.key);
 
-    }, [startPoint]);
+    if (startPoint) {
+      let index = players.findIndex((x) => x.name === currentPlayerName);
 
-    useEffect(() => {
-        // console.log(pathCount, 'iniii');
-        document.addEventListener("keydown", handleKeyPress);
+      let newPosition = { ...players[index] };
 
-        return () => {
-            document.removeEventListener("keydown", handleKeyPress);
-        };
-    });
+      // HANDLE ARROW KEY
+      switch (event.key) {
+        case "ArrowLeft":
+          newPosition.col -= 1;
+          // setCount(playerPathCount + 1);
+          break;
+        case "ArrowRight":
+          newPosition.col += 1;
 
-    const handleKeyPress = (event) => {
-        console.log(event.key);
+          // setCount(playerPathCount + 1);
 
-        if (startPoint) {
-            let index = players.findIndex((x) => x.name === currentPlayerName);
+          break;
+        case "ArrowUp":
+          newPosition.row -= 1;
+          // setCount(playerPathCount + 1);
 
-            let newPosition = { ...players[index]};
+          break;
+        case "ArrowDown":
+          newPosition.row += 1;
+          // setCount(playerPathCount + 1);
+          break;
+        default:
+          return;
+      }
 
-            // HANDLE ARROW KEY
-            switch (event.key) {
-                case "ArrowLeft":
-                    newPosition.col -= 1;
-                    // setCount(playerPathCount + 1);
-                    break;
-                case "ArrowRight":
-                    newPosition.col += 1;
+      // COLLLISION
+      if (!isWallAtPosition(newPosition.row, newPosition.col)) {
+        let newPlayers = [...players];
+        newPlayers[index] = newPosition;
+        setPlayers(newPlayers);
 
-                    // setCount(playerPathCount + 1);
+        socket.emit("updatePlayer", { newPlayers, roomId });
+      }
 
-                    break;
-                case "ArrowUp":
-                    newPosition.row -= 1;
-                    // setCount(playerPathCount + 1);
+      if (isTargetAtPosition(newPosition.row, newPosition.col)) {
+        let path = visualizeAlgo();
 
-                    break;
-                case "ArrowDown":
-                    newPosition.row += 1;
-                    // setCount(playerPathCount + 1);
-                    break;
-                default:
-                    return;
-            }
-           
-
-            // COLLLISION
-            if (!isWallAtPosition(newPosition.row, newPosition.col)) {
-                let newPlayers = [...players];
-                newPlayers[index] = newPosition;
-                setPlayers(newPlayers);
-
-                socket.emit('updatePlayer', {newPlayers, roomId})
-            }
-
-            if (isTargetAtPosition(newPosition.row, newPosition.col)) {
-                let path = visualizeAlgo();
-
-                if (playerPathCount <= path.length) {
-                    // useDispatch(incrementWins({gameType: 'singlePlayerWin'}))
-                    // incrementUserWin();
-                    Swal.fire({
-                        title: "Congrats ! You Win !",
-                        width: 500,
-                        padding: "3em",
-                        color: "#716add",
-                        backdrop: `
+        if (playerPathCount <= path.length) {
+          //if roomId -> multiplayer
+          // useDispatch(incrementWins({gameType: 'singlePlayerWin'}))
+          // incrementUserWin();
+          Swal.fire({
+            title: "Congrats ! You Win !",
+            width: 500,
+            padding: "3em",
+            color: "#716add",
+            backdrop: `
                     rgba linear-gradient(4deg, rgba(25,72,98,1) 0%, rgba(0,0,0,1) 50%);
                     left top
                     no-repeat
                   `,
-                    });
-                } else {
-                    Swal.fire({
-                        title: "Sorry, Try Again !",
-                        width: 500,
-                        padding: "3em",
-                        color: "#716add",
-                        backdrop: `
-                    rgba(25,72,98);
-                    left top
-                    no-repeat
-                  `,
-                    });
-                }
+          });
+        } else {
+          Swal.fire({
+            title: "Sorry, You Lose !",
+            width: 500,
+            padding: "3em",
+            color: "#716add",
+            backdrop: `
+                            rgba(25,72,98);
+                            left top
+                            no-repeat`,
+            showDenyButton: true,
+            confirmButtonColor: "#3085d6",
+            // denyButtonColor: "#d33",
+            confirmButtonText: "Try Again",
+            denyButtonText: "Back To Main Menu",
+            reverseButtons: true,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate("/maze");
+            } else if (result.isDenied) {
+              navigate("/main-menu");
             }
+          });
         }
-    };
+      }
+    }
+  };
 
-    const isTargetAtPosition = (row, col) => {
-        const cell = gridMap[row][col];
-        const isEndPoint = cell.isEndPoint;
-        return isEndPoint;
-    };
+  const isTargetAtPosition = (row, col) => {
+    const cell = gridMap[row][col];
+    const isEndPoint = cell.isEndPoint;
+    return isEndPoint;
+  };
 
-    const isWallAtPosition = (row, col) => {
-        const cell = gridMap[row][col];
-        const isWall = cell.isWall;
-        // console.log("is wall : " ,isWall );
-        return isWall;
-    };
+  const isWallAtPosition = (row, col) => {
+    const cell = gridMap[row][col];
+    const isWall = cell.isWall;
+    // console.log("is wall : " ,isWall );
+    return isWall;
+  };
 
-    return (
-        <>
-            <div className="absolute top-0 left-0 right-0 bottom-0">
-            {isStart ? players?.map((player) => {
-                    return (
-                        <img
-                            style={{
-                                left: 24 * (player.col + 1),
-                                top: 24 * player.row,
-                                position: "absolute",
-                                marginLeft: -5,
-                            }}
-                            width="22"
-                            height="22"
-                            src={Jeremy}
-                            alt="external-mouse-toy-pet-shop-yogi-aprelliyanto-outline-color-yogi-aprelliyanto"
-                        />
-                    );
-                }) : "" }
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className="absolute top-0 left-0 right-0 bottom-0">
+        {isStart
+          ? players?.map((player) => {
+              return (
+                <img
+                  style={{
+                    left: 24 * (player.col + 1),
+                    top: 24 * player.row,
+                    position: "absolute",
+                    marginLeft: -5,
+                  }}
+                  width="22"
+                  height="22"
+                  src={Jeremy}
+                  alt="external-mouse-toy-pet-shop-yogi-aprelliyanto-outline-color-yogi-aprelliyanto"
+                />
+              );
+            })
+          : ""}
+      </div>
+    </>
+  );
 }
 
 export default Players;

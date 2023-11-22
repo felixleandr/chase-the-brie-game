@@ -16,7 +16,7 @@ export default function GridBoard({ socket, roomId, players }) {
     const [gridMap, setGridMap] = useState(null);
     const [pathCount, setPathCount] = useState(null);
 
-    const [isMultiPlayer, setIsMultiPlayer] = useState(false);
+    const [isMultiPlayer, setIsMultiPlayer] = useState(true);
 
     const [cellsScanned, setCellsScanned] = useState(0);
     const [cellsTraveled, setCellsTraveled] = useState(0);
@@ -99,18 +99,25 @@ export default function GridBoard({ socket, roomId, players }) {
         const path = getPath(end);
         return path;
     };
+    console.log(players, "<<<<<");
 
     const visualizeAlgo = () => {
+        let start;
         grid = gridBoardCells.current;
         
-        // if(roomId){
+        if(roomId){
+            for(let i = 0; i < players.length; i++){
+                for(let j = 0; j < startPoint.length; j++){
+                    if(players[i].row === startPoint[j].row && players[i].col === startPoint[j].col){
+                        start = grid[players[i].row][players[i].col]
+                    }
+                }
+            }
+        } else {
+            start = grid[startPoint[0].row][startPoint[0].col];
+        }
+        console.log(start, 'ini');
 
-        // } else {
-
-        // }
-        console.log(startPoint, endPoint, 'ini');
-
-        let start = grid[startPoint[0].row][startPoint[0].col];
         let end = grid[endPoint.row][endPoint.col];
         let visitedCells = [];
 
@@ -132,20 +139,23 @@ export default function GridBoard({ socket, roomId, players }) {
         setRenderFlag(!renderFlag);
         clearBoard(); // just to be sure that board and path is cleared
         let playerCount;
+        console.log(roomId, 'roomid');
         if (roomId) {
             setIsMultiPlayer(true);
             playerCount = 2;
         } else {
             setIsMultiPlayer(false);
             playerCount = 1;
+        
         }
 
+        console.log(playerCount, isMultiPlayer, '///////');
         const startAndEndPoint = generateRandomMaze(
             gridBoardCells.current,
             isMultiPlayer,
             playerCount
         );
-
+        console.log(startAndEndPoint, 'afssadfgadsa');
         const gridBoard = gridBoardCells.current;
         socket.emit("playGame", { startAndEndPoint, roomId, gridBoard });
 
@@ -165,9 +175,7 @@ export default function GridBoard({ socket, roomId, players }) {
         if (foundPath && startPoint && endPoint) {
             animatePath(foundPath);
         }
-    }, [foundPath]); //eslint-disable-line
-
-    // Efek samping untuk menangani event playGame dari server
+    }, [foundPath]); 
     useEffect(() => {
         socket.on("playGame", (roomData) => {
             setRenderFlag(!renderFlag);
