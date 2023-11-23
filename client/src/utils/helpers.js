@@ -22,10 +22,10 @@ export const getCellObjects = (
   let gridCells = grid || [];
   let cellNumber = 0;
 
-  for (let rowInd = 0; rowInd < 30; rowInd++) {
+  for (let rowInd = 0; rowInd < 20; rowInd++) {
     let currentRow = [];
 
-    for (let colInd = 0; colInd < 52; colInd++) {
+    for (let colInd = 0; colInd < 40; colInd++) {
       if ((resetOnlyPath || resetOnlyWalls) && grid) {
         // don't recreate the grid instead just reset the path and walls flag conditionally
         grid[rowInd][colInd].isVisited = false;
@@ -77,13 +77,16 @@ export function getPath(endPoint) {
 
 export function getShortestPathCells(endCell) {
   const pathCells = [];
+  console.log(endCell, 'endcell');
   let currentCell = endCell;
-  console.log(currentCell, 'ini');
-  while (currentCell) {
-    // console.log(currentCell, 'dalam looping');
-    pathCells.push(currentCell);
-    currentCell = currentCell.previousCell;
+
+  if(endCell) {
+    while (currentCell && pathCells.length < 214748364 ) {
+      // console.log(pathCells.length, '<<<<');
+      pathCells.push(currentCell);
+      currentCell = currentCell.previousCell;
+    }
   }
-  console.log(pathCells, 'path cels');
+  console.log(pathCells.length, "path cells length");
   return pathCells;
 }

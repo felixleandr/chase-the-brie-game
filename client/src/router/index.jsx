@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, redirect, RouterProvider } from "react-router-dom";
 
 import LandingPage from "../views/LandingPage";
 import MainMenu from "../views/MainMenu";
@@ -25,10 +25,22 @@ const router = createBrowserRouter([
   {
     path: "/main-menu",
     element: <MainMenu />,
+    loader: () => {
+      if(!localStorage.access_token) {
+          return redirect('/')
+      }
+      return null 
+  }, 
   },
   {
-    path: "/maze",
+    path: "/maze/:roomId?",
     element: <MazePage />,
+    loader: () => {
+      if(!localStorage.access_token) {
+          return redirect('/')
+      }
+      return null 
+  }, 
   },
 ]);
 

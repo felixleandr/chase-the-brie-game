@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import RegisterPop from "../components/RegisterPop";
 import { login } from "../store/actionCreator";
+import Swal from "sweetalert2";
 
 function Login() {
   const [form, setForm] = useState({
@@ -36,6 +37,7 @@ function Login() {
       nav("/main-menu");
       //tambahin toast/alert success
     } catch (error) {
+      Swal.fire(`${error}`)
       console.log(error?.message ? error?.message : error);
     }
   }

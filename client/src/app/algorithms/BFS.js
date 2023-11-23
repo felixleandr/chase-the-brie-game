@@ -38,7 +38,7 @@ export function BFS(grid, startCell, endCell) {
     ) {
       grid[row][col + 1].previousCell = currentCell;
       unvisitedCellsQueue.unshift(grid[row][col + 1]);
-      // currentCell.isVisited = true;
+      currentCell.isVisited = true;
     }
 
     if (

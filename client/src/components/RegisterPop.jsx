@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Login from "./LoginPop";
 import { register } from "../store/actionCreator";
+import Swal from "sweetalert2";
+
 
 function RegisterPop() {
   const [form, setForm] = useState({
@@ -33,9 +35,10 @@ function RegisterPop() {
         email: "",
         password: "",
       });
-      nav("/main-menu");
+      nav("/login");
       //tambahin toast/alert success
     } catch (error) {
+      Swal.fire(`${error}`)
       console.log(error?.message ? error?.message : error);
     }
     // Code to handle login goes here

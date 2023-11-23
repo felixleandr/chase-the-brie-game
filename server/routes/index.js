@@ -14,7 +14,7 @@ router.use(authentication);
 router.get("/users", Controller.userFindAll);
 
 //router untuk singlePlayerWin+1 atau multiPlayerWin+1
-router.patch("/users/:_id", Controller.incrementWins);
+router.post("/users/:_id", Controller.incrementWins);
 
 router.get("/users/:_id", Controller.userFindOne);
 

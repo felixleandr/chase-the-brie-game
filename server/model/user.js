@@ -8,8 +8,12 @@ class User {
       const users = getDb().collection("users");
       const data = await users
         .find({}, { projection: { password: 0 } })
-        .sort({"singlePlayerWin": -1}, {"multiPlayerWin": -1})
+        .sort({singlePlayerWin : -1})
         .toArray();
+      data.map(el => {
+        el.totalWins = 0
+        return el
+      })
       return data;
     } catch (error) {
       throw error;

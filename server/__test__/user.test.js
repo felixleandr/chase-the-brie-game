@@ -228,6 +228,7 @@ describe('GET /users/:_id', function(){
 	})
 
     it('should return status 401 if there is no access token', async() => {
+        console.log(id);
 		const response = await request(app)
 		.get('/users/' + id)
 

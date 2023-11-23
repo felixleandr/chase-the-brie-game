@@ -1,60 +1,107 @@
-import { useState } from 'react';
-import background from '../assets/background.jpg'
-import GameSettings from '../components/GameSettings';
-import { Link, useNavigate } from 'react-router-dom';
-import WaitingRoom from '../components/WaitingRoom';
-import Leaderboard from '../components/Leaderboard';
+import { useState } from "react";
+import background from "../assets/background.jpg";
+import GameSettings from "../components/GameSettings";
+import { Link, useNavigate } from "react-router-dom";
+import WaitingRoom from "../components/WaitingRoom";
+import Leaderboard from "../components/Leaderboard";
+import JoinRoom from "../components/JoinRoomPop";
+import Swal from 'sweetalert2'
 
 function MainMenu() {
-    const [waitingRoom, setWaitingRoom] = useState(false)
-    const [leaderboard, setLeaderboard] = useState(false)
+    const [waitingRoom, setWaitingRoom] = useState(false);
+    const [leaderboard, setLeaderboard] = useState(false);
+    const [joinRoom, setJoinRoom] = useState(false);
+    const [roomCode, setRoomCode] = useState(false);
     const navigate = useNavigate();
 
     const togglePopUp = (player) => {
-        console.log(player, 'player');
-        setWaitingRoom(!waitingRoom)
-    }
+        console.log(player, "player");
+        setWaitingRoom(!waitingRoom);
+    };
 
     const toggleLeaderboard = () => {
-        console.log('masuk sini');
-        setLeaderboard(!leaderboard)
-    }
+        console.log("masuk sini");
+        setLeaderboard(!leaderboard);
+    };
 
+    const toggleJoinRoom = () => {
+        setJoinRoom(!joinRoom);
+    };
     const signOut = () => {
-        localStorage.clear();
-        navigate("/");
-      };
+        Swal.fire({
+            title: "<h2>Are you sure?</h2>",
+            icon: "warning",
+            html: "You will be logged out",
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "<span>Yes</span>",
+            confirmButtonColor: "#F26379",
+            cancelButtonText: "<span>Cancel</span>",
+            cancelButtonColor: "#6D27D9",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              localStorage.clear();
+              navigate("/");
+            }
+          });
+    };
 
-      
     return (
         <>
             <div className="w-full h-screen bg-gradient-to-r from-black to-regal-blue ... relative">
                 <div>
-                    <img className="w-full h-screen brightness-75" src={background} alt=""/>
+                    <img
+                        className="w-full h-screen brightness-75"
+                        src={background}
+                        alt=""
+                    />
                 </div>
-                <GameSettings/>
-                <div className='w-[600px] h-[600px] fixed top-[80px] bg-gradient-to-r from-lime-300  to-teal-500 ... left-[30%] rounded-[50px] flex justify-center items-center'>
-                    <div className='w-[590px] h-[590px] bg-slate-950 rounded-[50px] flex flex-col items-center font-Rubik px-9 py-10'>
-                        <div className=''>
-                            <p className='text-gray-300 text-3xl'>Main Menu</p>
-                            <div className='bg-white w-[100%] h-[1px]'></div>
+                <GameSettings />
+                <div className="w-[600px] h-[600px] fixed top-[80px] bg-gradient-to-r from-lime-300  to-teal-500 ... left-[30%] rounded-[50px] flex justify-center items-center">
+                    <div className="w-[590px] h-[590px] bg-slate-950 rounded-[50px] flex flex-col items-center font-Rubik px-9 py-10">
+                        <div className="">
+                            <p className="text-gray-300 text-3xl">Main Menu</p>
+                            <div className="bg-white w-[100%] h-[1px]"></div>
                         </div>
-                        <div className='flex flex-col gap-9 mt-[100px] text-gray-300 text-xl'>
-                            <button className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl' onClick={togglePopUp}>Single Player</button>
-                            <button className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl' onClick={togglePopUp}>Multiplayer</button>
-                            <button className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl' onClick={toggleLeaderboard}>Leaderboard</button>
-                            <button  className='hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl text-center' onClick={signOut}>Quit Game</button>
+                        <div className="flex flex-col gap-9 mt-[100px] text-gray-300 text-xl">
+                            <Link
+                                className="hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl"
+                                to={'/maze'}
+                            >
+                                Single Player
+                            </Link>
+                            <button
+                                className="hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl"
+                                onClick={toggleJoinRoom}
+                            >
+                                Multiplayer
+                            </button>
+                            <button
+                                className="hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl"
+                                onClick={toggleLeaderboard}
+                            >
+                                Leaderboard
+                            </button>
+                            <button
+                                className="hover:animate-bounce hover:tracking-widest h-9 hover:border-lime-300 border border-slate-950 px-5 py-1 rounded-xl text-center"
+                                onClick={signOut}
+                            >
+                                Quit Game
+                            </button>
                         </div>
                     </div>
-                    { waitingRoom && <WaitingRoom toggle={togglePopUp}/>   
-                    }
-                    { leaderboard && <Leaderboard toggle={toggleLeaderboard}/>   
-                    }
+                    {/* {waitingRoom && <WaitingRoom toggle={togglePopUp} />} */}
+                    {leaderboard && <Leaderboard toggle={toggleLeaderboard} />}
+                    {joinRoom && (
+                        <JoinRoom
+                            toggle={toggleJoinRoom}
+                            setRoomCode={setRoomCode}
+                        />
+                    )}
                 </div>
             </div>
         </>
-    )
+    );
 }
 
-
-export default MainMenu
+export default MainMenu;

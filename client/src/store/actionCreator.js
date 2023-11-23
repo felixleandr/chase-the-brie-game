@@ -1,4 +1,5 @@
-const url = "http://localhost:3000";
+const url = "https://confirmed-antique-boysenberry.glitch.me";
+// const url = "http://localhost:3000";
 
 export function register(data) {
   return async (dispatch, getState) => {
@@ -13,7 +14,9 @@ export function register(data) {
       });
 
       const responseJSON = await response.json();
+
       if (!response.ok) throw responseJSON.message;
+
       return dispatch({ type: "register_success", payload: responseJSON });
     } catch (error) {
       console.log(error);
@@ -29,12 +32,14 @@ export function login(data) {
         method: "post",
         headers: {
           "Content-Type": "application/json",
+          'API-Key': 'secret',
+          "Access-Control-Expose-Headers": "Content-Encoding,API-Key"
         },
         body: JSON.stringify(data),
       });
 
       const responseJSON = await response.json();
-      console.log(responseJSON);
+
       if (!response.ok) throw responseJSON.message;
       localStorage.setItem("access_token", responseJSON.access_token);
       localStorage.setItem('user', responseJSON.user.username)
@@ -99,7 +104,7 @@ export function incrementWins(gameType){
             console.log('masuk');
             const _id = localStorage._id
             const response = await fetch(`${url}/users/${_id}`, {
-                method: 'patch',
+                method: 'post',
                 headers: {
                     "Content-Type": "application/json",
                     access_token: localStorage.access_token
@@ -110,8 +115,8 @@ export function incrementWins(gameType){
             if(!response.ok){
                 throw resData
             }
-            fetchUserById()
-            return dispatch({type: 'userWin_patch_success', payload: resData})
+            await dispatch(fetchUserById())
+            return resData
         } catch (error) {
             throw error
         }
